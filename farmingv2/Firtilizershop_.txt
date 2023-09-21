@@ -1,0 +1,74 @@
+@name Firtilizershop_
+
+
+
+function printfirtilizershop(){
+    
+        Egp:egpBox(80,vec2(360,86),vec2(260,135)),Egp:egpColor(80,vec(215,202,118))
+        Egp:egpBox(81,Egp:egpPos(80)+vec2(60,0),vec2(110,110)),Egp:egpMaterial(81,"vgui/spawnmenu/hover")
+        
+        Egp:egpText(82,"Fertilizer: "+Fertilizertable[FChoice,table]["name",string],Egp:egpPos(80)-vec2(120,60)),Egp:egpColor(82,vec(100,100,100)),Egp:egpSize(82,13)
+        
+        Egp:egpText(83,"Price: "+Fertilizertable[FChoice,table]["price",number],Egp:egpPos(80)-vec2(120,30)),Egp:egpColor(83,vec(100,100,100)),Egp:egpSize(83,13)
+        
+        Egp:egpBox(84,Egp:egpPos(80)-vec2(+88,-50),vec2(22,22)),Egp:egpMaterial(84,"icon16/money.png")
+        
+        
+        Egp:egpBox(85,Egp:egpPos(84)-vec2(25,0),vec2(30,30)),Egp:egpMaterial(85,"gui/html/back")
+        
+        
+        Egp:egpBox(86,Egp:egpPos(84)+vec2(25,0),vec2(30,30)),Egp:egpMaterial(86,"gui/html/forward")
+        
+        
+        Egp:egpBox(87,Egp:egpPos(84)+vec2(50,0),vec2(22,22)),Egp:egpMaterial(87,"icon16/delete.png")
+      
+        Egp:egpBox(88,Egp:egpPos(87)+vec2(23,0),vec2(22,22)),Egp:egpMaterial(88,"icon16/add.png")
+        
+        Egp:egpText(89,"Quantity: 0",Egp:egpPos(80)-vec2(120,0)),Egp:egpColor(89,vec(100,100,100)),Egp:egpSize(89,13)
+        
+        Egp:egpBox(90,Egp:egpPos(80)+vec2(60,0),vec2(90,90)),Egp:egpMaterial(90,Fertilizertable[FChoice,table]["icon",string])
+    
+    }
+
+##RELATED TABLES##
+
+    Fertilizertable[1,table] = table(
+    "canbuy"=1,
+    "price"=100,
+    "model"="",
+    "name"="Stool",
+    "icon"="debug/particleerror"
+    
+    )
+    Fertilizertable[2,table] = table(
+    "canbuy"=1,
+    "price"=200,
+    "model"="",
+    "name"="Turbo poop",
+    "icon"="debug/particleerror"
+    
+    )
+    Fertilizertable[3,table] = table(
+    "canbuy"=1,
+    "price"=400,
+    "model"="",
+    "name"="Basic Fertilizer",
+    "icon"="debug/particleerror"
+    
+    )
+    Fertilizertable[4,table] = table(
+    "canbuy"=1,
+    "price"=500,
+    "model"="",
+    "name"="Organic Non-GMO Vegan safe Fertilizer",
+    "icon"="debug/particleerror"
+    
+    )
+    Fertilizertable[5,table] = table(
+    "canbuy"=1,
+    "price"=700,
+    "model"="",
+    "name"="Preamemum Fertilizer",
+    "icon"="debug/particleerror"
+    
+    )

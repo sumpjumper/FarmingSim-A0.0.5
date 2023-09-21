@@ -1,0 +1,46 @@
+@name Palletshop_
+
+
+
+function printpalletshop(){
+        
+        Egp:egpBox(80,vec2(360,86),vec2(260,135)),Egp:egpColor(80,vec(215,202,118))
+        Egp:egpBox(81,Egp:egpPos(80)+vec2(60,0),vec2(110,110)),Egp:egpMaterial(81,"vgui/spawnmenu/hover")
+        
+        Egp:egpText(82,"Pallet: "+Pallettable[FChoice,table]["name",string],Egp:egpPos(80)-vec2(120,60)),Egp:egpColor(82,vec(100,100,100)),Egp:egpSize(82,13)
+        Egp:egpText(83,"Price: "+Pallettable[FChoice,table]["price",number],Egp:egpPos(80)-vec2(120,30)),Egp:egpColor(83,vec(100,100,100)),Egp:egpSize(83,13)
+        
+        Egp:egpBox(84,Egp:egpPos(80)-vec2(+88,-50),vec2(22,22)),Egp:egpMaterial(84,"icon16/money.png")
+        
+        
+        Egp:egpBox(85,Egp:egpPos(84)-vec2(25,0),vec2(30,30)),Egp:egpMaterial(85,"gui/html/back")
+        
+        
+        Egp:egpBox(86,Egp:egpPos(84)+vec2(25,0),vec2(30,30)),Egp:egpMaterial(86,"gui/html/forward")
+        
+        Egp:egpBox(87,Egp:egpPos(80)+vec2(60,0),vec2(90,90)),Egp:egpMaterial(87,Pallettable[FChoice,table]["icon",string])
+}
+
+##RELATED TABLES##
+
+
+
+
+    Pallettable[1,table]       = table(
+    "canbuy"=1,
+    "price"=100,
+    "model"="models/props/de_prodigy/wood_pallet_01.mdl",
+    "name"="Small",
+    "icon"="spawnicons/models/props_industrial/pallet01.png",
+    "slots"= 9
+
+    )
+
+    Pallettable[2,table]       = table(
+    "canbuy"=1,
+    "price"=600,
+    "model"="models/props_junk/wood_pallet001a.mdl",
+    "name"="Large",
+    "icon"="spawnicons/models/props_junk/wood_pallet001a_128.png",
+    "slots"= 9
+    )

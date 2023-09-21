@@ -1,0 +1,67 @@
+@name Seedshop_
+
+
+
+function printseedshop(){
+
+        Egp:egpBox(80,vec2(360,86),vec2(260,135)),Egp:egpColor(80,vec(215,202,118))
+        Egp:egpBox(81,Egp:egpPos(80)+vec2(60,0),vec2(110,110)),Egp:egpMaterial(81,"vgui/spawnmenu/hover")
+        
+        Egp:egpText(82,"Seed Type: "+Seedtable[FChoice,table]["name",string],Egp:egpPos(80)-vec2(120,60)),Egp:egpColor(82,vec(100,100,100)),Egp:egpSize(82,13)
+        Egp:egpText(83,"Price: "+Seedtable[FChoice,table]["price",number],Egp:egpPos(80)-vec2(120,30)),Egp:egpColor(83,vec(100,100,100)),Egp:egpSize(83,13)
+        
+        Egp:egpBox(84,Egp:egpPos(80)-vec2(+88,-50),vec2(22,22)),Egp:egpMaterial(84,"icon16/money.png")
+        
+        
+        Egp:egpBox(85,Egp:egpPos(84)-vec2(25,0),vec2(30,30)),Egp:egpMaterial(85,"gui/html/back")
+        
+        
+        Egp:egpBox(86,Egp:egpPos(84)+vec2(25,0),vec2(30,30)),Egp:egpMaterial(86,"gui/html/forward")
+        
+        Egp:egpBox(87,Egp:egpPos(80)+vec2(60,0),vec2(90,90)),Egp:egpMaterial(87,Seedtable[FChoice,table]["icon",string])
+        
+}
+
+
+##RELATED TABLES##
+
+    Seedtable[1,table]       = table(
+    "canbuy"=1,
+    "price"=30,
+    "model"="models/weapons/w_package.mdl",
+    "mat"="models/weapons/w_package/package_sheet",
+    "name"="Orange",
+    "icon"="spawnicons/models/props/cs_italy/orange.png",
+    "col"= vec(255, 140, 0)
+    
+    )
+    Seedtable[2,table]       = table(
+    "canbuy"=1,
+    "price"=50,
+    "model"="models/weapons/w_package.mdl",
+    "mat"="models/weapons/w_package/package_sheet",
+    "name"="Banana",
+    "icon"="spawnicons/models/props/cs_italy/bananna_bunch.png",
+    "col"= vec(255, 213, 61)
+    
+    )
+    Seedtable[3,table]       = table(
+    "canbuy"=1,
+    "price"=80,
+    "model"="models/weapons/w_package.mdl",
+    "mat"="models/weapons/w_package/package_sheet",
+    "name"="Watermelon",
+    "icon"="spawnicons/models/props_junk/watermelon01_chunk01c.png",
+    "col"= vec(54, 201, 53)
+    
+    )
+    Seedtable[4,table]       = table(
+    "canbuy"=1,
+    "price"=100,
+    "model"="models/weapons/w_package.mdl",
+    "mat"="models/weapons/w_package/package_sheet",
+    "name"="Pumkin",
+    "icon"="spawnicons/models/props_outland/pumpkin01.png",
+    "col"= vec(255, 167, 111)
+    
+    )

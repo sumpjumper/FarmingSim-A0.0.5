@@ -1,0 +1,672 @@
+@name farmsim alpha v2
+@inputs Egp:wirelink User:entity 
+@outputs 
+@persist #[tables]#  [Stats,Owned,Fertilizertable,Pallettable,Seedtable,Landtable,Planttable]:table
+@persist #[Values]# [Plots,Pallets,Money,Level,Land,Fertilizer,FChoice]:number
+@persist #[Strings]# [Case]:string
+@persist #[Vectors]# [Spawnpoint]:vector
+@persist #[Entitys]# [X]:entity
+ 
+
+#include "farmingv2/Firtilizershop_"
+#include "farmingv2/Landshop_"
+#include "farmingv2/Palletshop_"
+#include "farmingv2/Plantshop_"
+#include "farmingv2/SeedShop_"
+
+##moved tables to table_.txt for easyer editing
+
+if(first()){
+    local XEgp = entity():isWeldedTo()
+    if(XEgp:type()=="gmod_wire_egp"){
+        entity():createWire(XEgp,"Egp","wirelink")
+        XEgp:setMaterial("models/debug/debugwhite")
+        XEgp:setColor(vec(50))
+        entity():createWire(XEgp,"User","User")
+        Egp:egpClear()    
+    }else{
+      selfDestruct()
+    }
+    
+    Spawnpoint = entity():pos()+vec(0,90,50)
+    User = owner()
+    Pallets = 0
+    Money = 53000
+    Level = 1
+    FChoice = 1
+
+    function entity mspawnitem(M:string,S:string){
+      X = propSpawn(M,Spawnpoint,0),X:setMaterial(S)
+      return X }
+    
+    function entity spawnitem(M:string){
+      X = propSpawn(M,Spawnpoint,0)
+      return X}
+        
+    function number changedX(X:string){if(changed(Case)&Case==X){return 1}else{return 0}}
+    
+    function number collided(A:entity,B:entity){}
+    
+
+    
+    #------------------ initialize ------------------#
+    
+        Case = "Startmenu"
+
+    #------------------------------------------------#
+}
+
+Cursor = Egp:egpCursor(User)
+
+
+
+
+switch(Case){
+    
+case "Startmenu",    
+    
+    if(changedX("Startmenu")){ for(I=1,6){ Egp:egpRemove(I) }
+
+        
+    Egp:egpBox(1,vec2(256,256),vec2(505,505)),Egp:egpColor(1,vec(128,212,255))
+    Egp:egpBox(2,vec2(256,85),vec2(256,56))
+    Egp:egpText(3,"Farming Sim ",vec2(152,60)),Egp:egpColor(3,vec(0,0,0)),Egp:egpSize(3,40)
+    Egp:egpBox(4,vec2(256,256),vec2(180,50))
+    Egp:egpText(5,"Start",vec2(220,240)),Egp:egpColor(5,vec(0,0,0)),Egp:egpSize(5,30)
+    Egp:egpBox(6,vec2(256,256),vec2(180,50)),Egp:egpColor(6,vec4(0,0,0,0))
+    Egp:egpBox(7,vec2(100,100),vec2(50,50))
+    Egp:egpBox(8,vec2(412,100),vec2(50,50))
+        
+            }
+
+    if(User&~User){
+        local LeftTop = Egp:egpPos(6) - Egp:egpSize(6)/2
+        local RightBottom = Egp:egpPos(6) + Egp:egpSize(6)/2 
+        if(inrange(Cursor, LeftTop, RightBottom)) {
+            Case = "Game"
+        }
+    }
+break   
+
+case "Game",
+
+    if(changedX("Game")){for(I=1,14){ Egp:egpRemove(I) }
+        
+            
+            holoCreate(14,Spawnpoint,vec(0.5))
+            holoModel(14,"models/editor/node_hint.mdl")
+            Egp:egpBox(15,vec2(256,256), vec2(505,505)),Egp:egpColor(15,vec(255,230,102))          #|\
+            Egp:egpBox(16,vec2(110,50),vec2(200,80)),Egp:egpColor(16,vec(255,242,179))             #| \ #background pannels
+            Egp:egpBox(17,vec2(360,185),vec2(280,350)),Egp:egpColor(17,vec(255,212,128))           #| / #
+            Egp:egpBox(18,vec2(255,435),vec2(490,130)),Egp:egpColor(18,vec(214,178,108))   
+            Egp:egpBox(19,vec2(110,205),vec2(200,210)),Egp:egpColor(19,vec(214,178,108)) 
+            #Egp:egpText(20,"",vec2(20,105))
+            Egp:egpText(22,"Farmer: "+owner():name(),vec2(20,15)),Egp:egpColor(22,vec(100,100,100))
+            Egp:egpText(23,"Money:"+Money,vec2(20,35)),Egp:egpColor(23,vec(100,100,100))
+        
+            Egp:egpBox(24,vec2(360,165),vec2(255,6)),Egp:egpColor(24,vec(214,178,108))
+            
+            Egp:egpBox(25,vec2(270,220),vec2(80)),Egp:egpColor(25,vec(255,242,179))  
+            #PlostShopICO = box()
+            Egp:egpText(26,"Buy Land",vec2(235,240)),Egp:egpColor(26,vec(100,100,100)),Egp:egpSize(26,16)
+            Egp:egpBox(27,vec2(270,220),vec2(80)),Egp:egpColor(27,vec4(0,0,0,0))
+            
+            Egp:egpBox(28,vec2(360,220),vec2(80)),Egp:egpColor(28,vec(255,242,179))  
+            #SeedtShopICO
+            Egp:egpText(29,"Buy Seeds",vec2(325,240)),Egp:egpColor(29,vec(100,100,100)),Egp:egpSize(29,16)
+            Egp:egpBox(30,vec2(360,220),vec2(80)),Egp:egpColor(30,vec4(0,0,0,0))
+            
+
+            
+            Egp:egpBox(34,vec2(360,310),vec2(80)),Egp:egpColor(34,vec(255,242,179))  
+            #FirtShopICO
+            Egp:egpText(35,"Buy Fertilizers",vec2(325,320)),Egp:egpColor(35,vec(100,100,100)),Egp:egpSize(35,13)
+            Egp:egpBox(36,vec2(360,310),vec2(80)),Egp:egpColor(36,vec4(0,0,0,0))
+            
+            Egp:egpBox(37,vec2(450,220),vec2(80)),Egp:egpColor(37,vec(255,242,179))  
+            #PalletShopICO
+            Egp:egpText(38,"Buy Pallets",vec2(416,240)),Egp:egpColor(38,vec(100,100,100)),Egp:egpSize(38,13)
+            Egp:egpBox(39,vec2(450,220),vec2(80)),Egp:egpColor(39,vec4(0,0,0,0))
+            
+            Egp:egpBox(40,vec2(450,310),vec2(80)),Egp:egpColor(40,vec(255,242,179))  
+            #PlantShopICO
+            Egp:egpText(41,"Buy Plant Hire",vec2(415,320)),Egp:egpColor(41,vec(100,100,100)),Egp:egpSize(41,13)
+            Egp:egpBox(42,vec2(450,310),vec2(80)),Egp:egpColor(42,vec4(0,0,0,0))
+            
+            #============================================SHOPBUTTONS ABOVE
+            #============================================Stats 
+           
+            Egp:egpText(46,"Level: "+Level,vec2(20,105)),Egp:egpColor(46,vec(100,100,100)),Egp:egpSize(46,19)
+            Egp:egpText(47,"Land Owned: "+Plots,vec2(20,125)),Egp:egpColor(47,vec(100,100,100)),Egp:egpSize(47,19)
+            Egp:egpText(48,"Pallets Owned: "+Pallets,vec2(20,145)),Egp:egpColor(48,vec(100,100,100)),Egp:egpSize(48,19)
+            Egp:egpText(49,"Fertilizer Type: NaN",vec2(20,165)),Egp:egpColor(49,vec(100,100,100)),Egp:egpSize(49,19)
+            
+            
+            Egp:egpBox(50,vec2(110,340),vec2(200,40)),Egp:egpColor(50,vec(255,212,128))
+            Egp:egpText(51,"Export Timer: 01:40",vec2(45,330)),Egp:egpColor(51,vec(100,100,100)),Egp:egpSize(51,19)
+            Egp:egpBox(52,vec2(30,340),vec2(30)),Egp:egpMaterial(52,"icon16/cross.png")
+            
+            Egp:egpBox(54,vec2(110,340),vec2(200,40)),Egp:egpColor(54,vec4(0,0,0,0))
+            
+            #============================================UserControl/resource export
+            
+            Egp:egpBox(55,vec2(470,420),vec2(40,30)),Egp:egpColor(55,vec(255,212,128))
+            Egp:egpText(56,"+100",vec2(450,412)),Egp:egpColor(56,vec(100,100,100)),Egp:egpSize(57,17)
+            Egp:egpBox(57,vec2(470,420),vec2(40,30)),Egp:egpColor(57,vec4(0,0,0,0))
+            
+            Egp:egpBox(58,vec2(420,420),vec2(40,30)),Egp:egpColor(58,vec(255,212,128))
+            Egp:egpText(59,"+10",vec2(404,412)),Egp:egpColor(59,vec(100,100,100)),Egp:egpSize(59,17)
+            Egp:egpBox(60,vec2(420,420),vec2(40,30)),Egp:egpColor(60,vec4(0,0,0,0))
+            
+            Egp:egpBox(61,vec2(370,420),vec2(40,30)),Egp:egpColor(61,vec(255,212,128))
+            Egp:egpText(62,"+1",vec2(357,412)),Egp:egpColor(62,vec(100,100,100)),Egp:egpSize(62,17)
+            Egp:egpBox(63,vec2(370,420),vec2(40,30)),Egp:egpColor(63,vec4(0,0,0,0))
+            
+            Egp:egpBox(64,vec2(370,475),vec2(50,30)),Egp:egpColor(64,vec(255,212,128))
+            Egp:egpText(65,"Sell",vec2(357,466)),Egp:egpColor(65,vec(100,100,100)),Egp:egpSize(65,17)
+            Egp:egpBox(66,vec2(370,475),vec2(50,30)),Egp:egpColor(66,vec4(0,0,0,0))
+            
+            Egp:egpBox(67,vec2(310,475),vec2(50,30)),Egp:egpColor(67,vec(255,212,128))
+            Egp:egpText(68,"Cancel",vec2(287,466)),Egp:egpColor(68,vec(100,100,100)),Egp:egpSize(67,17)
+            Egp:egpBox(69,vec2(310,475),vec2(50,30)),Egp:egpColor(69,vec4(0,0,0,0))
+        
+            Egp:egpBox(70,vec2(310,420),vec2(40,30)),Egp:egpColor(70,vec(255,212,128))
+            Egp:egpText(71,"-1",vec2(302,412)),Egp:egpColor(71,vec(100,100,100)),Egp:egpSize(71,17)
+            Egp:egpBox(72,vec2(310,420),vec2(40,30)),Egp:egpColor(72,vec4(0,0,0,0))
+            
+            Egp:egpBox(73,vec2(260,420),vec2(40,30)),Egp:egpColor(73,vec(255,212,128))
+            Egp:egpText(74,"-10",vec2(245,412)),Egp:egpColor(74,vec(100,100,100)),Egp:egpSize(74,17)
+            Egp:egpBox(75,vec2(260,420),vec2(40,30)),Egp:egpColor(75,vec4(0,0,0,0))
+            
+            Egp:egpBox(76,vec2(210,420),vec2(40,30)),Egp:egpColor(76,vec(255,212,128))
+            Egp:egpText(77,"-100",vec2(195,412)),Egp:egpColor(77,vec(100,100,100)),Egp:egpSize(77,17)
+            Egp:egpBox(78,vec2(210,420),vec2(40,30)),Egp:egpColor(78,vec4(0,0,0,0))
+            
+            #============================================produce amounts
+            
+            
+            Egp:egpText(79,"Shipment Box",vec2(15,370)),Egp:egpColor(79,vec(100,100,100)),Egp:egpSize(79,17)
+        
+            Egp:egpBox(80,vec2(360,86),vec2(260,135)),Egp:egpColor(80,vec(215,202,118))
+            Egp:egpBox(81,Egp:egpPos(80)+vec2(60,0),vec2(110,110)),Egp:egpMaterial(81,"vgui/spawnmenu/hover")
+            
+            
+    }
+
+    #stat based updates
+    function number moneychanged(X:number){if(changed(Money)&Money==X){return 1}else{return 0}}
+        if(moneychanged(Money)){Egp:egpSetText(23,"Money: "+Money)}
+
+
+    function number levelchanged(X:number){if(changed(Level)&Level==X){return 1}else{return 0}}
+        if(levelchanged(Level)){Egp:egpSetText(46,"Level: "+Level)}
+    
+    
+    function number landchanged(X:number){if(changed(Land)&Land==X){return 1}else{return 0}}
+        if(landchanged(Land)){Egp:egpSetText(47,"Land Owned: "+Land)}
+    
+    
+    function number palletchanged(X:number){if(changed(Pallets)&Money==X){return 1}else{return 0}}
+        if(palletchanged(Pallets)){Egp:egpSetText(48,"Pallets: "+Pallets)}
+    
+    
+    function number firtchanged(X:number){if(changed(Fertilizer)&Fertilizer==X){return 1}else{return 0}}
+        if(firtchanged(Fertilizer)){Egp:egpSetText(49,"Fertilizer: "+Fertilizertable[Fertilizer,string])}
+        
+    function switchPage(BId:number,Page:string) {
+        local LeftTop = Egp:egpPos(BId) - Egp:egpSize(BId) / 2
+        local RightBottom = Egp:egpPos(BId) + Egp:egpSize(BId) / 2
+        
+            if(inrange(Cursor, LeftTop, RightBottom)) {
+            Case = Page
+            
+            }
+    }
+        
+        
+    #function number buyable(X:number){if(changed(Fertilizer)&Fertilizer==X){return 1}else{return 0}}
+
+    if(User&~User){
+        
+        switchPage(27,"Landshop")
+        
+        switchPage(30,"Seedshop")
+        
+        switchPage(39,"Palletshop")
+        
+        switchPage(36,"Fertilizershop")
+        
+        switchPage(42,"Plantshop")
+    }
+
+break    
+
+case "Landshop",
+
+    if(changedX("Landshop")){for(I=80,100){ Egp:egpRemove(I) }
+        printlandshop() ##landshop_.txt
+        }
+        
+    if(User&~User){
+        
+        switchPage(27,"Landshop")
+        
+        switchPage(30,"Seedshop")
+        
+        switchPage(39,"Palletshop")
+        
+        switchPage(36,"Fertilizershop")
+        
+        switchPage(42,"Plantshop")
+         
+        local LeftTop = Egp:egpPos(42) - Egp:egpSize(42)/2
+        local RightBottom = Egp:egpPos(42) + Egp:egpSize(42)/2 
+        if(inrange(Cursor, LeftTop, RightBottom)) {
+            Egp:entity():soundPlay(1,1,"buttons/button15.wav")
+
+        } 
+        local LeftTop = Egp:egpPos(84) - Egp:egpSize(84)/2
+        local RightBottom = Egp:egpPos(84) + Egp:egpSize(84)/2 
+        if(inrange(Cursor, LeftTop, RightBottom)) {
+            Egp:entity():soundPlay(1,1,"buttons/button15.wav")
+            if(Money >= Landtable[FChoice,table]["price",number]){
+                Money -= Landtable[FChoice,table]["price",number]
+
+                local A = mspawnitem(Landtable[FChoice,table]["model",string],Landtable[FChoice,table]["mat",string])
+                
+                
+                Num = Owned:count()+1
+                Owned[Num,table] = table("ent" = A,
+                                         "slots" = Landtable[FChoice,table]["slots",number],
+                                         "id"=A:creationID() ) 
+                
+                
+                    if(moneychanged(Money)){Egp:egpSetText(23,"Money: "+Money)}
+                        print("Perchased:")
+                        print(Owned[Num,table]["ent",entity])
+                        print(Landtable[FChoice,table]["price",number])
+                        print(Owned[FChoice,table]["id",number])
+                
+            }
+        }
+        local LeftTop = Egp:egpPos(85) - Egp:egpSize(85)/2
+        local RightBottom = Egp:egpPos(85) + Egp:egpSize(85)/2 
+        if(inrange(Cursor, LeftTop, RightBottom)) {
+            Egp:entity():soundPlay(1,1,"buttons/button15.wav")
+            if(FChoice == 1){
+                FChoice = Landtable:count()
+                Egp:egpSetText(82,"Land Size: "+Landtable[FChoice,table]["name",string])
+                Egp:egpSetText(83,"Price: "+Landtable[FChoice,table]["price",number])
+                Egp:egpMaterial(87,Landtable[FChoice,table]["icon",string])
+                
+                }else{
+                    FChoice--
+                    Egp:egpSetText(82,"Land Size: "+Landtable[FChoice,table]["name",string])
+                    Egp:egpSetText(83,"Price: "+Landtable[FChoice,table]["price",number])
+                    Egp:egpMaterial(87,Landtable[FChoice,table]["icon",string])
+                     }
+        }
+         
+        local LeftTop = Egp:egpPos(86) - Egp:egpSize(86)/2
+        local RightBottom = Egp:egpPos(86) + Egp:egpSize(86)/2 
+        if(inrange(Cursor, LeftTop, RightBottom)) {
+            Egp:entity():soundPlay(1,1,"buttons/button15.wav")
+              if(FChoice == Landtable:count()){
+                FChoice = 1
+                Egp:egpSetText(82,"Land Size: "+Landtable[FChoice,table]["name",string])
+                Egp:egpSetText(83,"Price: "+Landtable[FChoice,table]["price",number])
+                Egp:egpMaterial(87,Landtable[FChoice,table]["icon",string])
+                }elseif(FChoice != Landtable:count()){
+                    FChoice++ 
+                    Egp:egpSetText(82,"Land Size: "+Landtable[FChoice,table]["name",string])
+                    Egp:egpSetText(83,"Price: "+Landtable[FChoice,table]["price",number])
+                    Egp:egpMaterial(87,Landtable[FChoice,table]["icon",string])
+                     }
+            }
+    }
+break
+
+case "Seedshop",
+
+    if(changedX("Seedshop")){for(I=80,100){ Egp:egpRemove(I) }
+        printseedshop() #seedshop_.txt
+        }
+        
+    if(User&~User){
+        
+        switchPage(27,"Landshop")
+        
+        switchPage(30,"Seedshop")
+        
+        switchPage(39,"Palletshop")
+        
+        switchPage(36,"Fertilizershop")
+        
+        switchPage(42,"Plantshop")
+        
+        local LeftTop = Egp:egpPos(84) - Egp:egpSize(84)/2 # buy button
+        local RightBottom = Egp:egpPos(84) + Egp:egpSize(84)/2 
+        if(inrange(Cursor, LeftTop, RightBottom)) {
+            
+            
+            if(Money >= Seedtable[FChoice,table]["price",number]){
+                Money -= Seedtable[FChoice,table]["price",number]
+                if(moneychanged(Money)){Egp:egpSetText(23,"Money: "+Money)}
+                
+                Num = Owned:count()+1
+                local A = mspawnitem(Seedtable[FChoice,table]["model",string],Seedtable[FChoice,table]["mat",string])
+                Owned[Num,table]= table("ent" = A,
+                                        "growthcount" = 0,
+                                        "isplantable" = 1,
+                                        "id"=A:creationID() )
+                                        
+                X:setColor(Seedtable[FChoice,table]["col",vector])
+                
+                print(Owned:count())
+                
+                Egp:entity():soundPlay(1,1,"buttons/button15.wav")
+                
+                }else{
+                    print("cant buy")
+                    Egp:entity():soundPlay(1,1,"buttons/button16.wav")
+                    
+                    }
+        }
+        local LeftTop = Egp:egpPos(85) - Egp:egpSize(85)/2 # back button
+        local RightBottom = Egp:egpPos(85) + Egp:egpSize(85)/2 
+        if(inrange(Cursor, LeftTop, RightBottom)) { 
+            if(FChoice == 1){ 
+                FChoice = Seedtable:count()
+                Egp:egpSetText(82,"Seed: "+Seedtable[FChoice,table]["name",string])
+                Egp:egpSetText(83,"Price: "+Seedtable[FChoice,table]["price",number])
+                Egp:egpMaterial(87,Seedtable[FChoice,table]["icon",string])
+                
+                }else{
+                    FChoice--
+                    Egp:egpSetText(82,"Seed: "+Seedtable[FChoice,table]["name",string])
+                    Egp:egpSetText(83,"Price: "+Seedtable[FChoice,table]["price",number])
+                    Egp:egpMaterial(87,Seedtable[FChoice,table]["icon",string])
+                     }
+        }
+        local LeftTop = Egp:egpPos(86) - Egp:egpSize(86)/2 # forward button
+        local RightBottom = Egp:egpPos(86) + Egp:egpSize(86)/2 
+        if(inrange(Cursor, LeftTop, RightBottom)) {
+            Egp:entity():soundPlay(1,1,"buttons/button15.wav")
+              if(FChoice == Seedtable:count()){
+                FChoice = 1
+                Egp:egpSetText(82,"Seed: "+Seedtable[FChoice,table]["name",string])
+                Egp:egpSetText(83,"Price: "+Seedtable[FChoice,table]["price",number])
+                Egp:egpMaterial(87,Seedtable[FChoice,table]["icon",string])
+                
+                }elseif(FChoice != Seedtable:count()){
+                    FChoice++ 
+                    Egp:egpSetText(82,"Seed: "+Seedtable[FChoice,table]["name",string])
+                    Egp:egpSetText(83,"Price: "+Seedtable[FChoice,table]["price",number])
+                    Egp:egpMaterial(87,Seedtable[FChoice,table]["icon",string])
+                     }
+            }
+        }
+      
+break
+
+case "Palletshop",
+
+    if(changedX("Palletshop")){for(I=80,100){ Egp:egpRemove(I) }
+        printpalletshop() #palletshop_.txt
+        
+        }
+        
+    if(User&~User){
+        
+        switchPage(27,"Landshop")
+        
+        switchPage(30,"Seedshop")
+        
+        switchPage(39,"Palletshop")
+        
+        switchPage(36,"Fertilizershop")
+        
+        switchPage(42,"Plantshop")
+        
+        local LeftTop = Egp:egpPos(84) - Egp:egpSize(84)/2 # Buy button
+        local RightBottom = Egp:egpPos(84) + Egp:egpSize(84)/2 
+        if(inrange(Cursor, LeftTop, RightBottom)) {
+        
+                    if(Money >= Pallettable[FChoice,table]["price",number]){
+                        Money -= Pallettable[FChoice,table]["price",number]
+                
+                        if(moneychanged(Money)){Egp:egpSetText(23,"Money: "+Money)}
+                        
+                      #  Num = Owned:count()+1
+                
+                        A = propSpawn(Pallettable[FChoice,table]["model",string],Spawnpoint,0)
+                        
+                        print(Pallettable[FChoice,table]["model",string])
+                        #Owned[Num,table]= table("ent" = A,
+                        #                "growthcount" = 0,
+                        #                "isplantable" = 0,
+                        #                "id"=A:creationID() ) 
+               
+                        #print(Owned:count())
+                
+                        Egp:entity():soundPlay(1,1,"buttons/button15.wav")
+                
+                            }else{
+                            print("cant buy")
+                            Egp:entity():soundPlay(1,1,"buttons/button16.wav")
+                    
+                            }
+        
+        } 
+        local LeftTop = Egp:egpPos(85) - Egp:egpSize(85)/2 #back button
+        local RightBottom = Egp:egpPos(85) + Egp:egpSize(85)/2 
+        if(inrange(Cursor, LeftTop, RightBottom)) {
+            Egp:entity():soundPlay(1,1,"buttons/button15.wav")
+             if(FChoice == 1){
+                FChoice = Pallettable:count()
+                Egp:egpSetText(82,"Pallet: "+Pallettable[FChoice,table]["name",string])
+                Egp:egpSetText(83,"Price: "+Pallettable[FChoice,table]["price",number])
+                Egp:egpMaterial(87,Pallettable[FChoice,table]["icon",string])
+                
+                }else{
+                    FChoice--
+                    Egp:egpSetText(82,"Pallet: "+Pallettable[FChoice,table]["name",string])
+                    Egp:egpSetText(83,"Price: "+Pallettable[FChoice,table]["price",number])
+                    Egp:egpMaterial(87,Pallettable[FChoice,table]["icon",string])
+                    print(FChoice)
+                     }
+        }
+        local LeftTop = Egp:egpPos(86) - Egp:egpSize(86)/2 # forward button
+        local RightBottom = Egp:egpPos(86) + Egp:egpSize(86)/2 
+        if(inrange(Cursor, LeftTop, RightBottom)) {
+            Egp:entity():soundPlay(1,1,"buttons/button15.wav")
+              if(FChoice == Pallettable:count()){
+                FChoice = 1
+                Egp:egpSetText(82,"Pallet: "+Pallettable[FChoice,table]["name",string])
+                Egp:egpSetText(83,"Price: "+Pallettable[FChoice,table]["price",number])
+                Egp:egpMaterial(87,Pallettable[FChoice,table]["icon",string])
+                
+                }elseif(FChoice != Pallettable:count()){
+                    FChoice++ 
+                    Egp:egpSetText(82,"Pallet: "+Pallettable[FChoice,table]["name",string])
+                    Egp:egpSetText(83,"Price: "+Pallettable[FChoice,table]["price",number])
+                    Egp:egpMaterial(87,Pallettable[FChoice,table]["icon",string])
+                    print(FChoice)
+                     }
+        } 
+        
+        
+    }
+break
+
+
+case "Fertilizershop",
+
+    if(changedX("Fertilizershop")){for(I=80,100){ Egp:egpRemove(I) }
+    printfirtilizershop() #firilizershop_.txt
+        }
+        
+    if(User&~User){
+        
+        switchPage(27,"Landshop")
+        
+        switchPage(30,"Seedshop")
+        
+        switchPage(39,"Palletshop")
+        
+        switchPage(36,"Fertilizershop")
+        
+        switchPage(42,"Plantshop")
+        
+        local LeftTop = Egp:egpPos(85) - Egp:egpSize(85)/2#back button
+        local RightBottom = Egp:egpPos(85) + Egp:egpSize(85)/2 
+        
+        if(inrange(Cursor, LeftTop, RightBottom)) {
+            Egp:entity():soundPlay(1,1,"buttons/button15.wav")
+            if(FChoice == 1){
+                FChoice = Fertilizertable:count()
+                Egp:egpSetText(82,"Fertilizer: "+Fertilizertable[FChoice,table]["name",string])
+                Egp:egpSetText(83,"Price: "+Fertilizertable[FChoice,table]["price",number])
+                
+                }else{
+                    FChoice--
+                    Egp:egpSetText(82,"Fertilizer: "+Fertilizertable[FChoice,table]["name",string])
+                    Egp:egpSetText(83,"Price: "+Fertilizertable[FChoice,table]["price",number])
+                     }
+                    
+
+            }
+        
+        local LeftTop = Egp:egpPos(86) - Egp:egpSize(86)/2              #forwards button
+        local RightBottom = Egp:egpPos(86) + Egp:egpSize(86)/2 
+        if(inrange(Cursor, LeftTop, RightBottom)) {
+            Egp:entity():soundPlay(1,1,"buttons/button15.wav")
+                if(FChoice == Fertilizertable:count()){
+                FChoice = 1
+                Egp:egpSetText(82,"Fertilizer: "+Fertilizertable[FChoice,table]["name",string])
+                Egp:egpSetText(83,"Price: "+Fertilizertable[FChoice,table]["price",number])
+                
+                }elseif(FChoice != Fertilizertable:count()){
+                    FChoice++ 
+                    Egp:egpSetText(82,"Fertilizer: "+Fertilizertable[FChoice,table]["name",string])
+                    Egp:egpSetText(83,"Price: "+Fertilizertable[FChoice,table]["price",number])
+                     }
+                    
+
+            
+        }
+        
+        local LeftTop = Egp:egpPos(84) - Egp:egpSize(84)/2              #buy button
+        local RightBottom = Egp:egpPos(84) + Egp:egpSize(84)/2 
+        if(inrange(Cursor, LeftTop, RightBottom)) {
+            Egp:entity():soundPlay(1,1,"buttons/button15.wav")
+            if(Money >= Fertilizertable[FChoice,table]["price",number] && Fertilizertable[FChoice,table]["canbuy",number] == 1 ){
+                Money -= Fertilizertable[FChoice,table]["price",number]
+                Fertilizer = FChoice
+                
+                if(moneychanged(Money)){Egp:egpSetText(23,"Money: "+Money)}
+                    
+                if(firtchanged(Fertilizer)){Egp:egpSetText(49,"Fertilizer: "+Fertilizertable[FChoice,table]["name",string])}  
+                  
+                Egp:egpSetText(82,"Fertilizer: "+Fertilizertable[FChoice,table]["name",string])
+                Egp:egpSetText(83,"Price: "+Fertilizertable[FChoice,table]["price",number])    
+                    
+                Fertilizertable[FChoice,table]["canbuy",number] = 0
+                
+                if(Fertilizertable[FChoice,table]["canbuy",number] == 0){ Egp:egpMaterial(87,"icon16/accept.png")}
+                    else{Egp:egpMaterial(87,"icon16/cancel.png")}
+                    
+                print(Fertilizertable[FChoice,table]["name",string]+" Baught!")}
+                    
+                    Egp:entity():soundPlay(1,1,"buttons/button15.wav")
+                        
+               
+        }
+        local LeftTop = Egp:egpPos(87) - Egp:egpSize(87)/2              #equip button
+        local RightBottom = Egp:egpPos(87) + Egp:egpSize(87)/2 
+        if(inrange(Cursor, LeftTop, RightBottom)){
+            if(Fertilizertable[FChoice,table]["canbuy",number] == 0){
+            Egp:egpSetText(49,"Fertilizer: "+Fertilizertable[FChoice,table]["name",string])
+            
+            Egp:entity():soundPlay(1,1,"buttons/button15.wav")}
+            
+            else{
+            
+            Egp:entity():soundPlay(1,1,"buttons/button8.wav")}
+            }
+      } 
+break
+
+case "Plantshop",
+
+    if(changedX("Plantshop")){for(I=80,100){ Egp:egpRemove(I) }
+        printplanthireshop() #plantshop_.txt
+        }
+        
+    if(User&~User){
+        
+        switchPage(27,"Landshop")
+        
+        switchPage(30,"Seedshop")
+        
+        switchPage(39,"Palletshop")
+        
+        switchPage(36,"Fertilizershop")
+        
+        switchPage(42,"Plantshop")
+        
+        local LeftTop = Egp:egpPos(85) - Egp:egpSize(85)/2#back button
+        local RightBottom = Egp:egpPos(85) + Egp:egpSize(85)/2 
+        
+        if(inrange(Cursor, LeftTop, RightBottom)) {
+            Egp:entity():soundPlay(1,1,"buttons/button15.wav")
+            if(FChoice == 1){
+                FChoice = Planttable:count()
+                Egp:egpSetText(82,"Planthire: "+Planttable[FChoice,table]["name",string])
+                Egp:egpSetText(83,"Price: "+Planttable[FChoice,table]["price",number])
+                
+                }else{
+                    FChoice--
+                    Egp:egpSetText(82,"Planthire: "+Planttable[FChoice,table]["name",string])
+                    Egp:egpSetText(83,"Price: "+Planttable[FChoice,table]["price",number])
+                     }
+                }
+                    
+        local LeftTop = Egp:egpPos(86) - Egp:egpSize(86)/2              #forwards button
+        local RightBottom = Egp:egpPos(86) + Egp:egpSize(86)/2 
+        if(inrange(Cursor, LeftTop, RightBottom)) {
+            Egp:entity():soundPlay(1,1,"buttons/button15.wav")
+                if(FChoice == Planttable:count()){
+                FChoice = 1
+                Egp:egpSetText(82,"Planthire: "+Planttable[FChoice,table]["name",string])
+                Egp:egpSetText(83,"Price: "+Planttable[FChoice,table]["price",number])
+                
+                }elseif(FChoice != Planttable:count()){
+                    FChoice++ 
+                    Egp:egpSetText(82,"Planthire: "+Planttable[FChoice,table]["name",string])
+                    Egp:egpSetText(83,"Price: "+Planttable[FChoice,table]["price",number])
+                     }
+        }
+    
+}
+break
+}
+
+
+#print(FChoice)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

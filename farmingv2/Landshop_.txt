@@ -1,0 +1,59 @@
+@name Landshop_
+
+
+
+function printlandshop(){
+    
+        
+        Egp:egpBox(80,vec2(360,86),vec2(260,135)),Egp:egpColor(80,vec(215,202,118))
+        Egp:egpBox(81,Egp:egpPos(80)+vec2(60,0),vec2(110,110)),Egp:egpMaterial(81,"vgui/spawnmenu/hover")
+        
+        Egp:egpText(82,"Land: "+Landtable[FChoice,table]["name",string],Egp:egpPos(80)-vec2(120,60)),Egp:egpColor(82,vec(100,100,100)),Egp:egpSize(82,13)
+        Egp:egpText(83,"Price: "+Landtable[FChoice,table]["price",number],Egp:egpPos(80)-vec2(120,30)),Egp:egpColor(83,vec(100,100,100)),Egp:egpSize(83,13)
+        
+        Egp:egpBox(84,Egp:egpPos(80)-vec2(+88,-50),vec2(22,22)),Egp:egpMaterial(84,"icon16/money.png")
+        
+        
+        Egp:egpBox(85,Egp:egpPos(84)-vec2(25,0),vec2(30,30)),Egp:egpMaterial(85,"gui/html/back")
+        
+        
+        Egp:egpBox(86,Egp:egpPos(84)+vec2(25,0),vec2(30,30)),Egp:egpMaterial(86,"gui/html/forward")
+        
+        Egp:egpBox(87,Egp:egpPos(80)+vec2(60,0),vec2(90,90)),Egp:egpMaterial(87,Landtable[FChoice,table]["icon",string])
+        
+        
+    
+    }
+
+##RELATED TABLES##
+
+    Landtable[1,table]       = table(
+    "canbuy"=1,
+    "price"=500,
+    "model"="models/sprops/rectangles/size_3/rect_24x24x3.mdl",
+    "mat"="phoenix_storms/potato",
+    "name"="1x1:plot",
+    "icon"="spawnicons/models/sprops/rectangles/size_3/rect_24x24x3.png",
+    "slots"= 1
+
+    )
+    Landtable[2,table]       = table(
+    "canbuy"=1,
+    "price"=700,
+    "mat"="phoenix_storms/potato",
+    "model"="models/sprops/rectangles/size_3/rect_24x48x3.mdl",
+    "name"="1x2:plot",
+    "icon"="spawnicons/models/sprops/rectangles/size_3/rect_24x48x3.png",
+    "slots"= 2
+    
+    )
+    Landtable[3,table]       = table(
+    "canbuy"=1,
+    "price"=1000,
+    "mat"="phoenix_storms/potato",
+    "model"="models/sprops/rectangles/size_5/rect_48x48x3.mdl",
+    "name"="2x2:plot",
+    "icon"="spawnicons/models/sprops/rectangles/size_5/rect_48x48x3.png",
+    "slots"= 4
+    
+    )
